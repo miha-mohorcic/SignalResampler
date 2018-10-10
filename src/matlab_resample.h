@@ -8,13 +8,16 @@
 
 //Author: Haoqi Bai
 
-#pragma once
+//modified by Miha Mohorčič (move to namespace, use std17 instead of boost,..)
 
-#include <boost/math/special_functions/bessel.hpp>
+#ifndef VISECG2_MATLAB_RESAMPLE_H
+#define VISECG2_MATLAB_RESAMPLE_H
 
+#include <stdint.h>
 #include <vector>
 
-using namespace std;
-
-void resample ( int upFactor, int downFactor, 
-  vector<double>& inputSignal, vector<double>& outputSignal );
+namespace ve::dsp::resample {
+  void matlab_resample(uint32_t upFactor, uint32_t downFactor,
+              std::vector<double> &inputSignal, std::vector<double> &outputSignal);
+}
+#endif
