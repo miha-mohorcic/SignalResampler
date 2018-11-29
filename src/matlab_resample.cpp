@@ -37,16 +37,16 @@ void firls(int length, vector<double> freq,
   auto weightSize = freqSize / 2;
 
   weight.reserve(weightSize);
-  for (int i = 0; i < weightSize; i++)
+  for (size_t i = 0; i < weightSize; i++)
     weight.push_back(1.0);
 
   int filterLength = length + 1;
 
-  for (int i = 0; i < freqSize; i++)
+  for (size_t i = 0; i < freqSize; i++)
     freq[i] /= 2.0;
 
   vector<double> dFreq;
-  for (int i = 1; i < freqSize; i++)
+  for (size_t i = 1; i < freqSize; i++)
     dFreq.push_back(freq[i] - freq[i - 1]);
 
   length = (filterLength - 1) / 2;
@@ -63,9 +63,9 @@ void firls(int length, vector<double> freq,
 
   vector<double> b;
   auto kSize = k.size();
-  for (int i = 0; i < kSize; i++)
+  for (size_t i = 0; i < kSize; i++)
     b.push_back(0.0);
-  for (int i = 0; i < freqSize; i += 2) {
+  for (size_t i = 0; i < freqSize; i += 2) {
     double slope = (amplitude[i + 1] - amplitude[i]) / (freq[i + 1] - freq[i]);
     double b1 = amplitude[i] - slope * freq[i];
     if (Nodd == 1) {
@@ -73,7 +73,7 @@ void firls(int length, vector<double> freq,
           slope / 2.0 * (freq[i + 1] * freq[i + 1] - freq[i] * freq[i]) *
               fabs(weight[(i + 1) / 2] * weight[(i + 1) / 2]);
     }
-    for (int j = 0; j < kSize; j++) {
+    for (size_t j = 0; j < kSize; j++) {
       b[j] += (slope / (4 * M_PI * M_PI) *
           (cos(2 * M_PI * k[j] * freq[i + 1]) - cos(2 * M_PI * k[j] * freq[i])) / (k[j] * k[j])) *
           fabs(weight[(i + 1) / 2] * weight[(i + 1) / 2]);
@@ -105,22 +105,22 @@ void firls(int length, vector<double> freq,
 
 void kaiser(const int order, const double bta, std::vector<double> &window) {
   double bes = fabs(std::cyl_bessel_i(0, bta));
-  int odd = order % 2;
+  auto odd = static_cast<size_t>(order % 2);
   double xind = (order - 1) * (order - 1);
-  int n = (order + 1) / 2;
+  auto n = static_cast<size_t>((order + 1) / 2);
   vector<double> xi;
   xi.reserve(n);
-  for (int i = 0; i < n; i++) {
+  for (size_t i = 0; i < n; i++) {
     double val = static_cast<double>( i ) + 0.5 * (1 - static_cast<double>( odd ));
     xi.push_back(4 * val * val);
   }
   vector<double> w;
   w.reserve(n);
-  for (int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     w.push_back(std::cyl_bessel_i(0, bta * sqrt(1 - xi[i] / xind)) / bes);
-  for (int i = n - 1; i >= odd; i--)
+  for (size_t i = n - 1; i >= odd; i--)
     window.push_back(fabs(w[i]));
-  for (int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     window.push_back(fabs(w[i]));
 }
 
@@ -167,7 +167,7 @@ void matlab_resample(uint32_t upFactor, uint32_t downFactor,
   h.reserve(coefficientsSize + nz);
   for (int i = 0; i < nz; i++)
     h.push_back(0.0);
-  for (int i = 0; i < coefficientsSize; i++)
+  for (size_t i = 0; i < coefficientsSize; i++)
     h.push_back(coefficients[i]);
   auto hSize = h.size();
   lengthHalf += nz;
