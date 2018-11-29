@@ -83,7 +83,7 @@ void firls(int length, vector<double> freq,
     b[0] = b0;
   vector<double> a;
   double w0 = weight[0];
-  for (int i = 0; i < kSize; i++)
+  for (size_t i = 0; i < kSize; i++)
     a.push_back((w0 * w0) * 4 * b[i]);
   if (Nodd == 1) {
     a[0] /= 2;
@@ -122,7 +122,7 @@ void kaiser(const int order, const double bta, std::vector<double> &window) {
 }
 
 void matlab_resample(uint32_t upFactor, uint32_t downFactor,
-              std::vector<double> &inputSignal, std::vector<double> &outputSignal) {
+              std::vector<double> const &inputSignal, std::vector<double> &outputSignal) {
   const int n = 10;
   const double bta = 5.0;
   if (upFactor <= 0 || downFactor <= 0)
@@ -155,7 +155,7 @@ void matlab_resample(uint32_t upFactor, uint32_t downFactor,
   vector<double> window;
   kaiser(length, bta, window);
   auto coefficientsSize = coefficients.size();
-  for (int i = 0; i < coefficientsSize; i++)
+  for (size_t i = 0; i < coefficientsSize; i++)
     coefficients[i] *= upFactor * window[i];
 
   int lengthHalf = (length - 1) / 2;

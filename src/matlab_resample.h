@@ -18,6 +18,6 @@
 
 namespace ve::dsp::resample {
   void matlab_resample(uint32_t upFactor, uint32_t downFactor,
-              std::vector<double> &inputSignal, std::vector<double> &outputSignal);
+              std::vector<double> const &inputSignal, std::vector<double> &outputSignal);
 }
 #endif

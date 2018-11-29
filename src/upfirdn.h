@@ -196,7 +196,7 @@ int Resampler<S1, S2, C>::apply(S1* in, int inCount,
 
 template<class S1, class S2, class C>
 void upfirdn(int upRate, int downRate, 
-             S1 *input, int inLength, C *filter, int filterLength, 
+             std::vector<S1> input, int inLength, C *filter, int filterLength,
              vector<S2> &results)
 /*
 This template function provides a one-shot resampling.  Extra samples
@@ -239,7 +239,7 @@ the original version of this function.
 
 template<class S1, class S2, class C>
 void upfirdn(int upRate, int downRate, 
-             vector<S1> &input, vector<C> &filter, vector<S2> &results)
+             vector<S1> const &input, vector<C> &filter, vector<S2> &results)
 /*
 This template function provides a one-shot resampling.
 The output is in the "results" vector which is modified by the function.
@@ -247,6 +247,6 @@ In this version, the input and filter are vectors as opposed to
 pointer/count pairs.
 */
 {
-    upfirdn<S1, S2, C>(upRate, downRate, &input[0], input.size(), &filter[0], 
+    upfirdn<S1, S2, C>(upRate, downRate, input, input.size(), &filter[0],
                        filter.size(), results);
 }
