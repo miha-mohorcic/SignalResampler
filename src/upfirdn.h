@@ -51,7 +51,7 @@ public:
     int        apply(S1* in, int inCount, S2* out, int outCount);
     int        neededOutCount(int inCount);
     int        coefsPerPhase() { return _coefsPerPhase; }
-    
+
 private:
     int        _upRate;
     int        _downRate;
@@ -59,13 +59,13 @@ private:
     coefType   *_transposedCoefs;
     inputType  *_state;
     inputType  *_stateEnd;
-    
+
     int        _paddedCoefCount;  // ceil(len(coefs)/upRate)*upRate
     int        _coefsPerPhase;    // _paddedCoefCount / upRate
-    
+
     int        _t;                // "time" (modulo upRate)
     int        _xOffset;
-    
+
 };
 
 
@@ -84,8 +84,8 @@ using std::invalid_argument;
 
 template<class S1, class S2, class C>
 Resampler<S1, S2, C>::Resampler(int upRate, int downRate, C *coefs,
-                                int coefCount):
-  _upRate(upRate), _downRate(downRate), _t(0), _xOffset(0)
+        int coefCount):
+        _upRate(upRate), _downRate(downRate), _t(0), _xOffset(0)
 /*
   The coefficients are copied into local storage in a transposed, flipped
   arrangement.  For example, suppose upRate is 3, and the input number
@@ -101,7 +101,7 @@ Resampler<S1, S2, C>::Resampler(int upRate, int downRate, C *coefs,
         _paddedCoefCount++;
     }
     _coefsPerPhase = _paddedCoefCount / _upRate;
-    
+
     _transposedCoefs = new coefType[_paddedCoefCount];
     fill(_transposedCoefs, _transposedCoefs + _paddedCoefCount, 0.);
 
@@ -118,7 +118,7 @@ Resampler<S1, S2, C>::Resampler(int upRate, int downRate, C *coefs,
         for (int j=0; j<_coefsPerPhase; ++j) {
             if (j*_upRate + i  < coefCount)
                 _transposedCoefs[(_coefsPerPhase-1-j) + i*_coefsPerPhase] =
-                                                coefs[j*_upRate + i];
+                        coefs[j*_upRate + i];
         }
     }
 }
@@ -141,9 +141,9 @@ int Resampler<S1, S2, C>::neededOutCount(int inCount)
 }
 
 template<class S1, class S2, class C>
-int Resampler<S1, S2, C>::apply(S1* in, int inCount, 
-                                S2* out, int outCount) {
-    if (outCount < neededOutCount(inCount)) 
+int Resampler<S1, S2, C>::apply(S1* in, int inCount,
+        S2* out, int outCount) {
+    if (outCount < neededOutCount(inCount))
         throw invalid_argument("Not enough output samples");
 
     // x points to the latest processed input sample
@@ -195,9 +195,9 @@ int Resampler<S1, S2, C>::apply(S1* in, int inCount,
 }
 
 template<class S1, class S2, class C>
-void upfirdn(int upRate, int downRate, 
-             std::vector<S1> input, int inLength, C *filter, int filterLength,
-             vector<S2> &results)
+void upfirdn(int upRate, int downRate,
+        std::vector<S1> input, int inLength, C *filter, int filterLength,
+        vector<S2> &results)
 /*
 This template function provides a one-shot resampling.  Extra samples
 are padded to the end of the input in order to capture all of the non-zero 
@@ -227,19 +227,20 @@ the original version of this function.
     }
 
     // calc size of output
-    int resultsCount = theResampler.neededOutCount(inLength + padding); 
+    int resultsCount = theResampler.neededOutCount(inLength + padding);
 
     results.resize(resultsCount);
 
     // run filtering
-    auto numSamplesComputed = theResampler.apply(inputPadded,
+    //auto numSamplesComputed =
+    theResampler.apply(inputPadded,
             inLength + padding, &results[0], resultsCount);
     delete[] inputPadded;
 }
 
 template<class S1, class S2, class C>
-void upfirdn(int upRate, int downRate, 
-             vector<S1> const &input, vector<C> &filter, vector<S2> &results)
+void upfirdn(int upRate, int downRate,
+        vector<S1> const &input, vector<C> &filter, vector<S2> &results)
 /*
 This template function provides a one-shot resampling.
 The output is in the "results" vector which is modified by the function.
@@ -248,5 +249,5 @@ pointer/count pairs.
 */
 {
     upfirdn<S1, S2, C>(upRate, downRate, input, input.size(), &filter[0],
-                       filter.size(), results);
+            filter.size(), results);
 }
